@@ -1,0 +1,5 @@
+{
+  "mongodb": {
+    "password": "mongodb_password"
+  }
+}
