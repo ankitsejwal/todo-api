@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  res.status(200).send('its working');
+  res.status(200).send('works');
 });
 
 router.get('/:id', async (req, res) => {});

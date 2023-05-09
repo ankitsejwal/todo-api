@@ -6,7 +6,8 @@ const app = express();
 app.use('/api/todos', todos);
 
 app.get('/', (req, res) => {
-  res.send('hello');
+  const env1 = app.get('env');
+  res.send(env1);
 });
 
 const port = process.env.PORT || 3000;
