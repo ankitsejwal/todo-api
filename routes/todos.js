@@ -18,7 +18,17 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {});
+router.post('/', async (req, res) => {
+  let todo = {
+    name: req.body.name,
+    unfinishedItems: req.body.unfinishedItems,
+    finishedItems: req.body.finishedItems,
+  };
+
+  todo = await new Todo(todo);
+  todo = await todo.save();
+  res.status(200).send(todo);
+});
 
 router.put('/:id', async (req, res) => {});
 
