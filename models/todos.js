@@ -22,4 +22,4 @@ const todoSchema = new mongoose.Schema({
   finishedItems: [String],
 });
 
-module.exports = mongoose.model('Todos', todoSchema);
+module.exports = mongoose.model('Todo', todoSchema);
