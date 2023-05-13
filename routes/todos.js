@@ -1,6 +1,5 @@
 const express = require('express');
 const Todo = require('../models/todos');
-const res = require('express/lib/response');
 
 const router = express.Router();
 
@@ -14,7 +13,7 @@ router.get('/', async (req, res) => {
 router.get('/:name', async (req, res) => {
   let todo = await Todo.findOne({ name: req.params.name });
   // if name is incorrect
-  if (!todo) return res.status(500).send('Incorrect name');
+  if (!todo) return res.status(500).send('incorrect name');
   // else
   res.status(200).send(todo);
 });
@@ -89,7 +88,7 @@ router.put('/:id/:item/:newVal', async (req, res) => {
 
   let todo = await Todo.findById(id);
   const indexOfItem = todo.unfinishedItems.indexOf(item);
-  if (indexOfItem === -1) return res.status(500).send('Item does not exist');
+  if (indexOfItem === -1) return res.status(500).send('item does not exist');
   todo.unfinishedItems.splice(indexOfItem, 1, newVal);
   todo = await todo.save();
   res.status(200).send(todo);
