@@ -10,14 +10,23 @@ router.get('/', async (req, res) => {
 });
 
 // get a single todo
-router.get('/:id', async (req, res) => {
-  try {
-    const todo = await Todo.findById(req.params.id);
-    res.status(200).send(todo);
-  } catch (err) {
-    console.log(err.message);
-    res.status(404).send('ID not found');
-  }
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const todo = await Todo.findById(req.params.id);
+//     res.status(200).send(todo);
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(404).send('ID not found');
+//   }
+// });
+
+// get a todo by name
+router.get('/:name', async (req, res) => {
+  let todo = await Todo.findOne({ name: req.params.name });
+  // if name is incorrect
+  if (!todo) return res.status(500).send('Incorrect name');
+  // else
+  res.status(200).send(todo);
 });
 
 // create a new todo
