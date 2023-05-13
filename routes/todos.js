@@ -42,6 +42,19 @@ router.post('/', async (req, res) => {
   res.status(200).send(todo);
 });
 
+// add items to unfinished array
+router.put('/:id', async (req, res) => {
+  const id = req.params.id;
+  let items = req.body.items;
+  items = items.trim().split(' ');
+  console.log(items);
+
+  let todo = await Todo.findById(id);
+  todo.unfinishedItems.push(...items);
+  todo = await todo.save();
+  res.send(todo);
+});
+
 // update an existing todo
 router.put('/:id', async (req, res) => {
   const id = req.params.id;
