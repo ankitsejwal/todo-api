@@ -1,4 +1,5 @@
 const express = require('express');
+const Joi = require('joi');
 const Todo = require('../models/todos');
 
 const router = express.Router();
@@ -20,13 +21,21 @@ router.get('/:name', async (req, res) => {
 
 // create a new todo
 router.post('/', async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(15).required(),
+    unfinishedItems: Joi.array(),
+    finishedItems: Joi.array(),
+  });
+
   let todo = {
     name: req.body.name,
     unfinishedItems: req.body.unfinishedItems,
     finishedItems: req.body.finishedItems,
   };
 
-  todo = await new Todo(todo);
+  const { value, error } = schema.validate(todo);
+  if (error) return res.status(500).send(error.details[0].message);
+  todo = await new Todo(value);
   todo = await todo.save();
   res.status(200).send(todo);
 });
