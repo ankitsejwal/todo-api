@@ -8,6 +8,11 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+router.get('/me', auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select('-password');
+  res.status(200).send(user);
+});
+
 router.get('/', auth, async (req, res) => {
   const user = await User.find();
   res.status(200).send(user);
