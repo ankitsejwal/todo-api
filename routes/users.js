@@ -31,11 +31,12 @@ router.post('/', async (req, res) => {
 
   try {
     user = await user.save();
-    user = _.pick(user, ['_id', 'name', 'email', 'phone']);
+    const token = user.genAuthToken();
 
-    const token = jwt.sign({ _id: user._id }, config.get('JWT_PVT_KEY'));
+    user = _.pick(user, ['_id', 'name', 'email', 'phone']);
     res.header('x-auth-token', token).status(200).send(user);
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 });

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const config = require('config');
 
 mongoose
@@ -21,5 +22,9 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, min: 8, max: 10, require: true },
   password: { type: String, min: 8, require: true },
 });
+
+userSchema.methods.genAuthToken = function () {
+  return jwt.sign({ _id: this._id }, config.get('JWT_PVT_KEY'));
+};
 
 module.exports = mongoose.model('User', userSchema);
