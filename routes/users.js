@@ -1,5 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const _ = require('lodash');
 const User = require('../models/users');
 
@@ -29,9 +31,10 @@ router.post('/', async (req, res) => {
 
   try {
     user = await user.save();
-
     user = _.pick(user, ['_id', 'name', 'email', 'phone']);
-    res.status(200).send(user);
+
+    const token = jwt.sign({ _id: user._id }, config.get('JWT_PVT_KEY'));
+    res.header('x-auth-token', token).status(200).send(user);
   } catch (err) {
     res.status(500).send(err);
   }
