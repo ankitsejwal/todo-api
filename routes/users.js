@@ -4,10 +4,11 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const _ = require('lodash');
 const User = require('../models/users');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const user = await User.find();
   res.status(200).send(user);
 });
