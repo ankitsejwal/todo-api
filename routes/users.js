@@ -5,15 +5,16 @@ const config = require('config');
 const _ = require('lodash');
 const User = require('../models/users');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
-router.get('/me', auth, async (req, res) => {
+router.get('/me', auth, admin, async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
   res.status(200).send(user);
 });
 
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   const user = await User.find();
   res.status(200).send(user);
 });
@@ -29,6 +30,7 @@ router.post('/', async (req, res) => {
     email: req.body.email,
     phone: req.body.phone,
     password: req.body.password,
+    isAdmin: req.body.isAdmin,
   };
   user = new User(user);
 
