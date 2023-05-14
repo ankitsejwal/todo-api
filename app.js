@@ -6,6 +6,11 @@ const auth = require('./routes/auth');
 
 const app = express();
 
+if (!config.get('JWT_PVT_KEY')) {
+  console.log('FATAL ERROR: JWT_PVT_KEY is not defined');
+  process.exit(1);
+}
+
 app.use(express.json());
 
 app.use('/api/todos', todos);
