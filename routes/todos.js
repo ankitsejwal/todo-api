@@ -23,8 +23,8 @@ router.get('/:name', async (req, res) => {
 router.post('/', async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(15).required(),
-    unfinishedItems: Joi.array(),
-    finishedItems: Joi.array(),
+    unfinishedItems: Joi.array().items(Joi.string().min(3).max(15)),
+    finishedItems: Joi.array().items(Joi.string().min(3).max(15)),
   });
 
   let todo = {
