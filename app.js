@@ -19,8 +19,3 @@ app.use('/api/auth', auth);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('port:', port));
-
-// futher tasks:
-// add joi, bcrypt, password hashing, jwt
-// add authentication
-// add authorization
