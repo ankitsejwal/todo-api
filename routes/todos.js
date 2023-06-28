@@ -1,6 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
-const Todo = require('../models/todos');
+const Todo = require('../models/Todo');
 
 const router = express.Router();
 

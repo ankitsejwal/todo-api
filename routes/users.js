@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
-const User = require('../models/users');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 
