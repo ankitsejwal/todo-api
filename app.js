@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const config = require('config');
 const todos = require('./routes/todos');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
