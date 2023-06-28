@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const config = require('config');
 const todos = require('./routes/todos');
@@ -5,16 +6,14 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const unfinished = require('./routes/unfinished');
 const finished = require('./routes/finished');
+const dbConnect = require('./dbConnect');
+const checkSecrets = require('./checkSecrets');
 
+checkSecrets();
+dbConnect();
 const app = express();
 
-if (!config.get('JWT_PVT_KEY')) {
-  console.log('FATAL ERROR: JWT_PVT_KEY is not defined');
-  process.exit(1);
-}
-
 app.use(express.json());
-
 app.use('/api/todos', todos);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
