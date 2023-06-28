@@ -8,8 +8,8 @@ const todoSchema = new mongoose.Schema({
     max: 18,
     lowercase: true,
   },
-  unfinishedItems: [String],
-  finishedItems: [String],
+  unfinishedItems: { type: [String], default: [] },
+  finishedItems: { type: [String], default: [] },
 });
 
 module.exports = mongoose.model('Todo', todoSchema);
