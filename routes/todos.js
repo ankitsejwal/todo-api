@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Todo = require('../models/Todo');
+const { Todo } = require('../models/Todo');
 const validate = require('../middleware/validate');
 
 // get all the todos

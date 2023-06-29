@@ -2,13 +2,15 @@ const _ = require('lodash');
 const Joi = require('joi');
 Joi.objectid = require('joi-objectid')(Joi);
 const { todoJoiSchema } = require('../models/Todo');
+const { userJoiSchema } = require('../models/User');
 
 module.exports = function (req, res, next) {
   const body = req.body;
   const id = req.params.id;
   const isBodyEmpty = _.isEmpty(body);
 
-  let joiSchema = todoJoiSchema;
+  let joiSchema; // here goes the condition to choose between a joiSchema from a model
+
   if (isBodyEmpty && id) {
     body = { id: id };
     joiSchema = { id: Joi.objectid() };

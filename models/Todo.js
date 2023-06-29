@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
+Joi.objectid = require('joi-objectid')(Joi);
 
 const todoSchema = new mongoose.Schema({
   name: {

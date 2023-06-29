@@ -1,70 +1,78 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
-const User = require('../models/User');
+const { User } = require('../models/User');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 
 const router = express.Router();
 
+// get details
 router.get('/me', auth, admin, async (req, res) => {
-  const user = await User.findById(req.user._id).select('-password');
-  res.status(200).send(user);
-});
-
-router.get('/', async (req, res) => {
-  const user = await User.find();
-  res.status(200).send(user);
-});
-
-router.get('/:id', async (req, res) => {
-  const user = await User.findById(req.params.id);
-  res.status(200).send(user);
-});
-
-router.post('/', async (req, res) => {
-  let user = {
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    password: req.body.password,
-    isAdmin: req.body.isAdmin,
-  };
-  user = new User(user);
-
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
-
   try {
-    user = await user.save();
-    const token = user.genAuthToken();
-
-    user = _.pick(user, ['_id', 'name', 'email', 'phone']);
-    res.header('x-auth-token', token).status(200).send(user);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
+    const user = await User.findById(req.user._id).select('-password');
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
   }
 });
 
-router.put('/:id', async (req, res) => {
-  let user = await User.findById(req.params.id);
-  user.name = req.body.name;
-  user.email = req.body.email;
-  user.phone = req.body.phone;
-  user.password = req.body.password;
-
-  user = await user.save();
-  res.status(200).send(user);
+// get all the users
+router.get('/', async (req, res) => {
+  try {
+    const user = await User.find();
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
 });
 
-router.delete('/:id', async (req, res) => {
+// get a user by id
+router.get('/:id', validate, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).send('user not found');
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// create a new user
+router.post('/', validate, async (req, res) => {
+  try {
+    const user = new User(req.body);
+    user.password = await bcrypt.hash(req.body.password, 10);
+    await user.save();
+    // generate a new token
+    const token = user.genAuthToken();
+    user = _.pick(user, ['_id', 'name', 'email', 'phone']);
+    // send user in response
+    res.header('x-auth-token', token).status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// update a user
+router.put('/:id', validate, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!user) return res.status(404).send('user not found');
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// delete a user
+router.delete('/:id', validate, async (req, res) => {
   try {
     const user = await User.findByIdAndRemove(req.params.id);
+    if (!user) return res.status(404).send('user not found');
     res.status(200).send(user);
-  } catch (err) {
-    console.log(err.message);
-    res.status(404).send('user not found');
+  } catch (error) {
+    res.status(400).send(error);
   }
 });
 
