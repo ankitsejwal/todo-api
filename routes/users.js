@@ -50,7 +50,7 @@ router.post('/', validateBody(joiSchema), async (req, res) => {
     const token = user.genAuthToken();
     user = _.pick(user, ['_id', 'name', 'email', 'phone']);
     // send user in response
-    res.header('x-auth-token', token).status(200).send(user);
+    res.header('todo-auth-token', token).status(200).send(user);
   } catch (error) {
     res.status(400).send(error);
   }

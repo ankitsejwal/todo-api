@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 function auth(req, res, next) {
-  const token = req.header('x-auth-token');
+  const token = req.header('todo-auth-token');
   if (!token) return res.status(401).send('No token provided');
 
   try {
@@ -9,7 +9,7 @@ function auth(req, res, next) {
     req.user = decoded;
     next();
   } catch (ex) {
-    res.status(400).send('Invalid token');
+    res.status(400).send(ex);
   }
 }
 
