@@ -54,5 +54,3 @@ router.delete('/:item', async (req, res) => {
 });
 
 module.exports = router;
-
-// transfer unfinshed to finished
