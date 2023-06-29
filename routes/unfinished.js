@@ -3,8 +3,8 @@ const Todo = require('../models/Todo');
 const router = express.Router();
 
 // get all the unfinished items from a todo
-router.get('/:todoID', async (req, res) => {
-  const todoID = req.params.todoID;
+router.get('/', async (req, res) => {
+  const todoID = req.params.id;
   const todo = await Todo.findById(todoID);
 
   const unfinishedItems = todo.unfinishedItems;
@@ -12,35 +12,36 @@ router.get('/:todoID', async (req, res) => {
 });
 
 // add items to unfinished array
-router.post('/:todoID', async (req, res) => {
-  const todoID = req.params.todoID;
+router.post('/', async (req, res) => {
+  const todoID = req.params.id;
   let items = req.body.items;
   // use space to add multiple items
   items = items.trim().split(' ');
 
-  let todo = await Todo.findById(todoID);
+  const todo = await Todo.findById(todoID);
   todo.unfinishedItems.push(...items);
-  todo = await todo.save();
+  await todo.save();
   res.send(todo);
 });
 
 // update an item in unfinished
-router.put('/:todoID/:item/:newVal', async (req, res) => {
-  const todoID = req.params.todoID;
+router.put('/:item/:newVal', async (req, res) => {
+  const todoID = req.params.id;
   const item = req.params.item;
   const newVal = req.params.newVal;
 
-  let todo = await Todo.findById(todoID);
+  const todo = await Todo.findById(todoID);
+  if (!todo) return res.status(404).send('todo not found');
   const indexOfItem = todo.unfinishedItems.indexOf(item);
   if (indexOfItem === -1) return res.status(500).send('item does not exist');
   todo.unfinishedItems.splice(indexOfItem, 1, newVal);
-  todo = await todo.save();
+  await todo.save();
   res.status(200).send(todo);
 });
 
 // delete an item from unfinished
-router.delete('/:todoID/:item', async (req, res) => {
-  const todoID = req.params.todoID;
+router.delete('/:item', async (req, res) => {
+  const todoID = req.params.id;
   const item = req.params.item;
 
   let todo = await Todo.findById(todoID);

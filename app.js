@@ -16,8 +16,8 @@ app.use(express.json());
 app.use('/api/todos', todos);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
-app.use('/api/unfinished', unfinished);
-app.use('/api/finished', finished);
+app.use('/api/:id/unfinished', unfinished);
+app.use('/api/:id/finished', finished);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('port:', port));

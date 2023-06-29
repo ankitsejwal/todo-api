@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Todo } = require('../models/Todo');
-const validate = require('../middleware/validate');
+const validate = require('../middleware/validateBody');
 
 // get all the todos
 router.get('/', async (req, res) => {
