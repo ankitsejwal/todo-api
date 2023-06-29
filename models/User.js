@@ -14,13 +14,13 @@ userSchema.methods.genAuthToken = function () {
   return jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, process.env.JWT_PVT_KEY);
 };
 
+const User = mongoose.model('User', userSchema);
+
 const joiSchema = {
   name: Joi.string().required().min(3).max(18),
   email: Joi.string().email().required().min(6).max(50),
   password: Joi.string().required().min(8).max(100),
   repeatPassword: Joi.ref('password'),
 };
-
-const User = mongoose.model('User', userSchema);
 
 module.exports = { User, joiSchema };
