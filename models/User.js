@@ -14,7 +14,7 @@ userSchema.methods.genAuthToken = function () {
   return jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, process.env.JWT_PVT_KEY);
 };
 
-const userJoiSchema = {
+const joiSchema = {
   name: Joi.string().required().min(3).max(18),
   email: Joi.string().email().required().min(6).max(50),
   password: Joi.string().required().min(8).max(100),
@@ -23,4 +23,4 @@ const userJoiSchema = {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = { User, userJoiSchema };
+module.exports = { User, joiSchema };

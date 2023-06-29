@@ -14,12 +14,12 @@ const todoSchema = new mongoose.Schema({
   finishedItems: { type: [String], default: [] },
 });
 
-const joiSchema = Joi.object({
+const bodySchema = Joi.object({
   name: Joi.string().min(3).max(15).required(),
   unfinishedItems: Joi.array().items(Joi.string().min(3).max(15)),
   finishedItems: Joi.array().items(Joi.string().min(3).max(15)),
 });
 
-const Todo = mongoose.model('Todo', todoSchema);
+const Todo = mongoose.model('Todo', bodySchema);
 
 module.exports = { Todo, joiSchema };
