@@ -1,9 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
-const { User } = require('../models/User');
+const { User, joiSchema } = require('../models/User');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
+const validateBody = require('../middleware/validateBody');
+const validateID = require('../middleware/validateID');
 
 const router = express.Router();
 
@@ -28,7 +30,7 @@ router.get('/', async (req, res) => {
 });
 
 // get a user by id
-router.get('/:id', validate, async (req, res) => {
+router.get('/:id', validateID, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).send('user not found');
@@ -39,7 +41,7 @@ router.get('/:id', validate, async (req, res) => {
 });
 
 // create a new user
-router.post('/', validate, async (req, res) => {
+router.post('/', validateBody(joiSchema), async (req, res) => {
   try {
     const user = new User(req.body);
     user.password = await bcrypt.hash(req.body.password, 10);
@@ -55,7 +57,7 @@ router.post('/', validate, async (req, res) => {
 });
 
 // update a user
-router.put('/:id', validate, async (req, res) => {
+router.put('/:id', validateBody(joiSchema), validateID, async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!user) return res.status(404).send('user not found');
@@ -66,7 +68,7 @@ router.put('/:id', validate, async (req, res) => {
 });
 
 // delete a user
-router.delete('/:id', validate, async (req, res) => {
+router.delete('/:id', validateID, async (req, res) => {
   try {
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user) return res.status(404).send('user not found');
