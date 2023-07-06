@@ -11,11 +11,11 @@ const todoSchema = new mongoose.Schema({
 
 const Todo = mongoose.model('Todo', todoSchema);
 
-const bodySchema = Joi.object({
+const joiTodoSchema = Joi.object({
   name: Joi.string().min(3).max(15).required(),
   // todo: validate user if needed later
   unfinishedItems: Joi.array().items(Joi.string().min(3).max(15)),
   finishedItems: Joi.array().items(Joi.string().min(3).max(15)),
 });
 
-module.exports = { Todo, joiSchema };
+module.exports = { Todo, joiTodoSchema };

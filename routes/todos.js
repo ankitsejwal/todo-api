@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { Todo, joiSchema } = require('../models/Todo');
-const validateBody = require('../middleware/validateBody');
-const validateID = require('../middleware/validateID');
+const { Todo, joiTodoSchema } = require('../models/Todo');
+const validate = require('../middleware/validate');
 
 // get all the todos
 router.get('/', async (req, res) => {
@@ -14,7 +13,7 @@ router.get('/', async (req, res) => {
 });
 
 // get a single todo
-router.get('/:id', validateID, async (req, res) => {
+router.get('/:id', validate('id'), async (req, res) => {
   try {
     const todo = await Todo.findById(req.params.id);
     if (!todo) return res.status(404).send('todo not found');
@@ -25,7 +24,7 @@ router.get('/:id', validateID, async (req, res) => {
 });
 
 // create a new todo
-router.post('/', validateBody(joiSchema), async (req, res) => {
+router.post('/', validate(joiTodoSchema), async (req, res) => {
   try {
     const todo = await new Todo(req.body);
     await todo.save();
@@ -36,7 +35,7 @@ router.post('/', validateBody(joiSchema), async (req, res) => {
 });
 
 // update an existing todo
-router.put('/:id', validateBody(joiSchema), validateID, async (req, res) => {
+router.put('/:id', validate(joiTodoSchema), validate('id'), async (req, res) => {
   try {
     const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!todo) return res.status(404).send('todo not found');
@@ -47,7 +46,7 @@ router.put('/:id', validateBody(joiSchema), validateID, async (req, res) => {
 });
 
 // delete a todo
-router.delete('/:id', validateID, async (req, res) => {
+router.delete('/:id', validate('id'), async (req, res) => {
   try {
     const todo = await Todo.findByIdAndDelete(req.params.id);
     if (!todo) return res.stats(404).send('todo not found');
