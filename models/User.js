@@ -16,11 +16,16 @@ userSchema.methods.genAuthToken = function () {
 
 const User = mongoose.model('User', userSchema);
 
-const joiSchema = {
+const joiUserSchema = {
   name: Joi.string().required().min(3).max(18),
   email: Joi.string().email().required().min(6).max(50),
   password: Joi.string().required().min(8).max(100),
   repeatPassword: Joi.ref('password'),
 };
 
-module.exports = { User, joiSchema };
+const joiAuthSchema = {
+  email: Joi.string().email().min(6).max(50).required(),
+  password: Joi.string().min(8).max(100).required(),
+};
+
+module.exports = { User, joiUserSchema, joiAuthSchema };
